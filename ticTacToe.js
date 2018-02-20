@@ -49,3 +49,29 @@ const handleEntry = (entry) => {
   table[heightIndex][widthIndex] !== ' ' ? null :
   table[heightIndex][widthIndex] = currentUser;
 }
+
+// prompts users to select a spot in the table
+const promptUser = () => {
+  prompt.get(['Pick a slot number on the board \n (A-C for height, 1-3 for width)'], 
+  (err, result) => {
+    if (err) {
+      console.log(err)
+    } else {
+      console.log(`You picked ${result['Pick a slot number on the board \n (A-C for height, 1-3 for width)']}`);
+      handleEntry(result['Pick a slot number on the board \n (A-C for height, 1-3 for width)']);
+      changeUser();
+      printUserTurn();
+      printTable();
+      promptUser();
+    }
+  });
+}
+
+// start the game
+const startGame = () => {
+  printUserTurn();
+  printTable();
+  promptUser();
+}
+
+startGame();
