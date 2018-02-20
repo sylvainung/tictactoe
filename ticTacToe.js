@@ -19,12 +19,6 @@ let table = [
   [' ', ' ', ' ']
 ];
 
-const tableReset = [
-  [' ', ' ', ' '],
-  [' ', ' ', ' '],
-  [' ', ' ', ' ']
-];
-
 // prints playing table
 const printTable = () => {
   console.log(`| ${table[0][0]} | ${table[0][1]} | ${table[0][2]} |\n`);
@@ -60,21 +54,18 @@ const checkWinner = () => {
   let winner = null;
 
   // checks for row wins
-  for (let i = 0; i < table.length; i++) {
-    let row = table[i];
-
+  table.forEach(row => {
     let xWins = row.every(user => user === 'X');
     let oWins = row.every(user => user === 'O');
   
     xWins ? winner = 'x' :
     oWins ? winner = 'o' : null;
-  }
-
-  // checks for column wins
+  });
 
   return winner;
 }
 
+// prompts users to see if they want to restart the game
 const promptNewGame = () => {
   prompt.get(['Start a new game? y / n'],
   (err, result) => {
@@ -83,8 +74,6 @@ const promptNewGame = () => {
     } else {
       let answer = result[['Start a new game? y / n']];
       if (answer === 'y') {
-        table = tableReset;
-        currentUser = 'O'
         startGame();
       }
     }
@@ -93,6 +82,12 @@ const promptNewGame = () => {
 
 // prompts users to select a spot in the table
 const promptUser = () => {
+  let tempReset = [
+    [' ', ' ', ' '],
+    [' ', ' ', ' '],
+    [' ', ' ', ' ']
+  ];
+  
   prompt.get(['Pick a slot number on the board \n (A-C for height, 1-3 for width)'], 
   (err, result) => {
     if (err) {
@@ -108,6 +103,8 @@ const promptUser = () => {
 
       if (winner) {
         console.log(`${winner.toUpperCase()} wins the game!`);
+        currentUser = 'O';
+        table = tempReset;
         promptNewGame();
         return;
       }
