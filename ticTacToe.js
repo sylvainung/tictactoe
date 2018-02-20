@@ -13,7 +13,13 @@ const changeUser = () => {
 };
 
 // creates playing table
-const table = [
+let table = [
+  [' ', ' ', ' '],
+  [' ', ' ', ' '],
+  [' ', ' ', ' ']
+];
+
+const tableReset = [
   [' ', ' ', ' '],
   [' ', ' ', ' '],
   [' ', ' ', ' ']
@@ -50,18 +56,62 @@ const handleEntry = (entry) => {
   table[heightIndex][widthIndex] = currentUser;
 }
 
+const checkWinner = () => {
+  let winner = null;
+
+  // checks for row wins
+  for (let i = 0; i < table.length; i++) {
+    let row = table[i];
+
+    let xWins = row.every(user => user === 'X');
+    let oWins = row.every(user => user === 'O');
+  
+    xWins ? winner = 'x' :
+    oWins ? winner = 'o' : null;
+  }
+
+  // checks for column wins
+
+  return winner;
+}
+
+const promptNewGame = () => {
+  prompt.get(['Start a new game? y / n'],
+  (err, result) => {
+    if (err) {
+      console.error(err);
+    } else {
+      let answer = result[['Start a new game? y / n']];
+      if (answer === 'y') {
+        table = tableReset;
+        currentUser = 'O'
+        startGame();
+      }
+    }
+  }
+)}
+
 // prompts users to select a spot in the table
 const promptUser = () => {
   prompt.get(['Pick a slot number on the board \n (A-C for height, 1-3 for width)'], 
   (err, result) => {
     if (err) {
-      console.log(err)
+      console.error(err)
     } else {
       console.log(`You picked ${result['Pick a slot number on the board \n (A-C for height, 1-3 for width)']}`);
       handleEntry(result['Pick a slot number on the board \n (A-C for height, 1-3 for width)']);
       changeUser();
       printUserTurn();
       printTable();
+
+      let winner = checkWinner();
+
+      if (winner) {
+        console.log(`${winner.toUpperCase()} wins the game!`);
+        promptNewGame();
+        return;
+      }
+
       promptUser();
     }
   });
