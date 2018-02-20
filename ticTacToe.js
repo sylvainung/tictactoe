@@ -53,31 +53,33 @@ const handleEntry = (entry) => {
 const checkWinner = () => {
   let winner = null;
 
+  // checks for row wins
   table.forEach(row => {
-    // checks for row wins
     let xWins = row.every(user => user === 'X');
     let oWins = row.every(user => user === 'O');
     xWins ? winner = 'X' :
     oWins ? winner = 'O' : null;
   });
 
-  // checks for column wins if no row wins
-  const winObj = {};
+  // checks for column wins
+  const colObj = {};
   
   table.forEach(row => {
     for (let i = 0; i < row.length; i++) {
-      winObj[i] = winObj[i] || [];
-      winObj[i].push(row[i]);
+      colObj[i] = colObj[i] || [];
+      colObj[i].push(row[i]);
     }
   });
   
-  for (let key in winObj) {
-    xWins = winObj[key].every(user => user === 'X');
-    oWins = winObj[key].every(user => user === 'O');
-    
+  for (let key in colObj) {
+    xWins = colObj[key].every(user => user === 'X');
+    oWins = colObj[key].every(user => user === 'O');
+
     xWins ? winner = 'X' :
     oWins ? winner = 'O' : null;
   }
+
+  // checks for diagonal wins
 
   return winner;
 }
