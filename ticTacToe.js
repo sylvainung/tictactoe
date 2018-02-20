@@ -53,14 +53,31 @@ const handleEntry = (entry) => {
 const checkWinner = () => {
   let winner = null;
 
-  // checks for row wins
   table.forEach(row => {
+    // checks for row wins
     let xWins = row.every(user => user === 'X');
     let oWins = row.every(user => user === 'O');
-  
-    xWins ? winner = 'x' :
-    oWins ? winner = 'o' : null;
+    xWins ? winner = 'X' :
+    oWins ? winner = 'O' : null;
   });
+
+  // checks for column wins if no row wins
+  const winObj = {};
+  
+  table.forEach(row => {
+    for (let i = 0; i < row.length; i++) {
+      winObj[i] = winObj[i] || [];
+      winObj[i].push(row[i]);
+    }
+  });
+  
+  for (let key in winObj) {
+    xWins = winObj[key].every(user => user === 'X');
+    oWins = winObj[key].every(user => user === 'O');
+    
+    xWins ? winner = 'X' :
+    oWins ? winner = 'O' : null;
+  }
 
   return winner;
 }
@@ -102,7 +119,7 @@ const promptUser = () => {
       let winner = checkWinner();
 
       if (winner) {
-        console.log(`${winner.toUpperCase()} wins the game!`);
+        console.log(`${winner} wins the game!`);
         currentUser = 'O';
         table = tempReset;
         promptNewGame();
